@@ -13,4 +13,10 @@ set "bin_dir=bin\!config!"
 if not exist "!temp_dir!" mkdir "!temp_dir!"
 if not exist "!bin_dir!" mkdir "!bin_dir!"
 
-cl.exe /EHsc /Zi /std:c++17 /Fo"!temp_dir!\\" /Fd"!temp_dir!\gitcopy.pdb" /Fe"!bin_dir!\gitcopy.exe" gitcopy.cpp
+if "%config%"=="release" (
+    set "cl_flags=/EHsc /O2 /DNDEBUG /std:c++17 /MD"
+) else (
+    set "cl_flags=/EHsc /Zi /Od /D_DEBUG /std:c++17 /MDd /Fd"!temp_dir!\gitcopy.pdb""
+)
+
+cl.exe !cl_flags! /Fo"!temp_dir!\\" /Fe"!bin_dir!\gitcopy.exe" gitcopy.cpp
