@@ -2,8 +2,10 @@
 call "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
 if %errorlevel% neq 0 exit /b %errorlevel%
 setlocal enabledelayedexpansion
-set "config=%1"
-if "!config!"=="" set "config=debug"
+set "config=debug"
+
+REM Check for -release flag
+if "%1"=="-release" set "config=release"
 
 set "temp_dir=temp"
 set "bin_dir=bin\!config!"

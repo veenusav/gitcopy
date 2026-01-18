@@ -2,5 +2,5 @@
 *.obj
 *.pdb
 *.ilk
-.vscode/
+# .vscode/
 test_repo/

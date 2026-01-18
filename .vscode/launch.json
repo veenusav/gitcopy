@@ -1,0 +1,34 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug gitcopy",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/gitcopy.exe",
+            "args": [
+                ".",
+                "G:\\temp\\backuptest"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal"
+        },
+        {
+            "name": "Debug gitcopy -changes",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/gitcopy.exe",
+            "args": [
+                ".",
+                "G:\\temp\\backuptest",
+                "-changes"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal"
+        }
+    ]
+}

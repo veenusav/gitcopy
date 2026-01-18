@@ -1,0 +1,37 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build gitcopy",
+            "command": ".\\build.bat",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "group": {
+                "kind": "build",
+                // "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "Build gitcopy (Release)",
+            "command": ".\\build.bat",
+            "args": [
+                "-release"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "group": {
+                "kind": "build"
+            }
+        }
+    ]
+}
