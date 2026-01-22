@@ -120,12 +120,16 @@ int main(int argc, char* argv[]) {
         
         if (changesOnly) {
              // Get modified and untracked files
+             // Get branch name
+             std::string branchName = trim(exec("git rev-parse --abbrev-ref HEAD"));
+
              std::string statusOutput = exec("git status --porcelain --untracked-files=all");
              std::stringstream ss(statusOutput);
              std::string line;
              std::ofstream readme(destRoot / "gitcopy_readme.txt");
              readme << "Changes Copy Report" << std::endl;
              readme << "Source: " << startPath << std::endl;
+             readme << "Branch: " << branchName << std::endl;
              readme << "Date: " << timeStr << std::endl << std::endl;
              
              while (std::getline(ss, line)) {

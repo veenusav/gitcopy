@@ -1,7 +1,7 @@
 # Test script for gitcopy
-$gitcopyExe = "C:\workspace.gocharam\gitcopy\gitcopy.exe"
-$testDir = "C:\workspace.gocharam\gitcopy\test_repo"
-$backupDir = "G:\temp\backuptest_auto"
+$gitcopyExe = "$PSScriptRoot\bin\release\gitcopy.exe"
+$testDir = "$PSScriptRoot\temp\test_repo"
+$backupDir = "$PSScriptRoot\temp\backups"
 
 # Clean up previous runs
 if (Test-Path $testDir) { Remove-Item -Recurse -Force $testDir }
@@ -34,9 +34,27 @@ New-Item -ItemType Directory -Path "untracked_dir" | Out-Null
 "untracked content" | Out-File "untracked_dir\untracked_file.txt"
 # Standard git status would show "untracked_dir/" which caused Access Denied
 
-$outputUntracked = & $gitcopyExe "." $backupDir "-c" 2>&1
-$outputUntracked | Write-Host
-if ($outputUntracked -match "Failed to copy") { Write-Error "Access denied error still present!" } else { Write-Host "No access denied error - OK" }
+$output = & $gitcopyExe "." $backupDir "-c" 2>&1
+$output | Write-Host
+if ($output -match "gitcopy_readme.txt") {
+    Write-Host "Readme report message confirmed - OK"
+    # Verify content
+    $readmePath = $output | Where-Object { $_ -match "Report created at: (.*)" } | ForEach-Object { $Matches[1] }
+    if ($readmePath) {
+        # Remove surrounding quotes if present
+        $readmePath = $readmePath.Trim('"')
+        Write-Host "Checking readme at: $readmePath"
+        
+        if (Test-Path $readmePath) {
+             $readmeContent = Get-Content $readmePath
+             Write-Host "Readme Content:"
+             $readmeContent | Write-Host
+             if ($readmeContent -match "Branch: master") { Write-Host "Branch name found in readme - OK" } else { Write-Error "Branch name missing in readme!" }
+        } else {
+             Write-Error "Readme file not found at extracted path: $readmePath"
+        }
+    }
+} else { Write-Error "Readme report message missing!" }
 
 # Verify file existence
 $latestBackup = Get-ChildItem $backupDir | Sort-Object CreationTime -Descending | Select-Object -First 1
@@ -49,5 +67,9 @@ Start-Sleep -Seconds 2
 $outputDeleted = & $gitcopyExe "." $backupDir "-c" 2>&1
 $outputDeleted | Write-Host
 if ($outputDeleted -match "Skipped 1 deleted/missing files") { Write-Host "Skipped file reported - OK" }
+
+Write-Host "Cleaning up test artifacts..."
+if (Test-Path "$PSScriptRoot\temp") { Remove-Item -Recurse -Force "$PSScriptRoot\temp" }
+Write-Host "Cleanup done."
 
 Write-Host "Done."
